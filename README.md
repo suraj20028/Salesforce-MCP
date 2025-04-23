@@ -205,7 +205,7 @@ Add the following to your `claude_desktop_config.json`:
 ### Project Structure
 
 ```
-mcp-server-demo/
+salesforce-mcp-server/
 ├── server.py             # MCP server implementation
 ├── sf_connection.py      # Salesforce authentication
 ├── tools/

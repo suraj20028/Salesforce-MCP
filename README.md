@@ -18,7 +18,11 @@ An MCP (Model Context Protocol) server implementation that integrates Claude/VS 
 
 1. To run the server in a container, you will need to have [Docker](https://www.docker.com/) installed.
 2. Once Docker is installed, you will also need to ensure Docker is running.
-3. You will need Salesforce OAuth2 credentials:
+3. Pull the image **suraj20028/salesforce-mcp-server** from docker hub using the command:
+   ```json
+   docker pull suraj20028/salesforce-mcp-server
+   ```
+5. You will need Salesforce OAuth2 credentials:
    - For OAuth 2.0 Client Credentials Flow: Client ID, Client Secret, and Instance URL
 
 ## Installation

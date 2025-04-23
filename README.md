@@ -85,40 +85,6 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
 
 More about using MCP server tools in VS Code's [agent mode documentation](https://code.visualstudio.com/docs/copilot/chat/mcp-servers).
 
-### Usage with Claude Desktop
-
-Add the following to your `claude_desktop_config.json`:
-
-#### For OAuth 2.0 Client Credentials Flow:
-
-```json
-{
-  "mcpServers": {
-    "salesforce": {
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "-e",
-        "SALESFORCE_CONNECTION_TYPE=OAuth_2.0_Client_Credentials",
-        "-e",
-        "SALESFORCE_CLIENT_ID",
-        "-e",
-        "SALESFORCE_CLIENT_SECRET",
-        "-e",
-        "SALESFORCE_INSTANCE_URL",
-        "ghcr.io/yourusername/salesforce-mcp-server"
-      ],
-      "env": {
-        "SALESFORCE_CONNECTION_TYPE": "OAuth_2.0_Client_Credentials",
-        "SALESFORCE_CLIENT_ID": "your_client_id",
-        "SALESFORCE_CLIENT_SECRET": "your_client_secret"
-      }
-    }
-  }
-}
-```
 ## Tools
 
 | Tool Name                        | Description                                                    | Parameters                                                                                                                                   |

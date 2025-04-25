@@ -12,40 +12,36 @@ from simple_salesforce import Salesforce
 def authenticate(
     client_id: str,
     client_secret: str,
-    username: str,
-    password: str,
-    sandbox: bool = False,
+    username: str = None,
+    password: str = None,
+    domain_url: str = None,
 ) -> Tuple[str, str]:
     """
-    Authenticate with Salesforce using OAuth 2.0 Password flow
+    Authenticate with Salesforce using OAuth 2.0 Client Credentials flow
 
     Args:
         client_id: Connected app client ID
         client_secret: Connected app client secret
-        username: Salesforce username
-        password: Salesforce password
-        sandbox: Whether to connect to sandbox (True) or production (False)
+        username: Salesforce username (not used in payload)
+        password: Salesforce password (not used in payload)
+        domain_url: Custom Salesforce domain URL
 
     Returns:
         Tuple of (access_token, instance_url)
     """
-    auth_url = (
-        "https://login.salesforce.com/services/oauth2/token"
-        if not sandbox
-        else "https://test.salesforce.com/services/oauth2/token"
-    )
+    if not domain_url:
+        raise ValueError("SALESFORCE_DOMAIN_URL must be provided.")
+    auth_url = f"{domain_url.rstrip('/')}/services/oauth2/token"
     payload = {
-        "grant_type": "password",
+        "grant_type": "client_credentials",
         "client_id": client_id,
         "client_secret": client_secret,
-        "username": username,
-        "password": password,
     }
-
     response = requests.post(auth_url, data=payload)
     response.raise_for_status()
     access_token = response.json().get("access_token")
     instance_url = response.json().get("instance_url")
+    print(f"[SUCCESS] Authenticated using client_credentials.")
     return access_token, instance_url
 
 
@@ -60,46 +56,29 @@ def get_connection(cached: bool = True) -> Salesforce:
     Returns:
         Salesforce connection object
     """
-    # Default credentials - you should replace these with environment variables in production
     creds = {
         "client_id": os.environ.get("SALESFORCE_CLIENT_ID"),
         "client_secret": os.environ.get("SALESFORCE_CLIENT_SECRET"),
-        "username": os.environ.get("SALESFORCE_USERNAME"),
-        "password": os.environ.get("SALESFORCE_PASSWORD"),
-        "sandbox": os.environ.get("SANDBOX", "True").lower() == 'true',
+        "domain_url": os.environ.get("SALESFORCE_DOMAIN_URL"),
     }
 
-    # Static variable to cache the connection
     if not hasattr(get_connection, "_instance") or not cached:
-        # Get OAuth tokens using the authenticate function
         access_token, instance_url = authenticate(
             creds["client_id"],
             creds["client_secret"],
-            creds["username"],
-            creds["password"],
-            creds["sandbox"],
+            domain_url=creds["domain_url"],
         )
-        
-        # Create Salesforce instance with proper initialization for all APIs
-        # We're using session_id to pass the OAuth token, but also specifying domain
-        # to ensure proper initialization of the Tooling API
-        domain = 'test' if creds["sandbox"] else 'login'
         get_connection._instance = Salesforce(
-            instance_url=instance_url, 
+            instance_url=instance_url,
             session_id=access_token,
-            domain=domain  # This ensures Tooling API is properly initialized
         )
-        
-        # Store the tokens for future reference if needed
         get_connection._access_token = access_token
         get_connection._instance_url = instance_url
         get_connection._connection_info = {
-            "username": creds["username"],
             "instance_url": instance_url,
-            "domain": domain,
         }
-
     return get_connection._instance
+
 
 def get_connection_info() -> Dict[str, str]:
     """

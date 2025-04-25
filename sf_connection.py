@@ -66,7 +66,7 @@ def get_connection(cached: bool = True) -> Salesforce:
         "client_secret": os.environ.get("SALESFORCE_CLIENT_SECRET"),
         "username": os.environ.get("SALESFORCE_USERNAME"),
         "password": os.environ.get("SALESFORCE_PASSWORD"),
-        "sandbox": True,
+        "sandbox": os.environ.get("SANDBOX", "True").lower() == 'true',
     }
 
     # Static variable to cache the connection

@@ -22,8 +22,11 @@ An MCP (Model Context Protocol) server implementation that integrates Claude/VS 
    ```json
    docker pull suraj20028/salesforce-mcp-server
    ```
-5. You will need Salesforce OAuth2 credentials:
+4. You will need Salesforce OAuth2 credentials:
    - For OAuth 2.0 Client Credentials Flow: Client ID, Client Secret, and Instance URL
+5. As this Project will use OAuth2 auth method, make sure the following are done:
+> Enable the client credentials flow for your connected app. Under API (Enable OAuth Settings), select Enable Client Credentials Flow.
+> Select an execution user for the flow under **Manage Connected Apps**
 
 ## Installation
 
@@ -64,8 +67,8 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
     },
     {
       "type": "promptString",
-      "id": "sandbox",
-      "description": "Salesforce Sandbox",
+      "id": "domain_url",
+      "description": "Salesforce Domain URL <https://yourdomain.my.salesforce.com> ",
       "password": false
     }
   ],
@@ -80,6 +83,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
         "-e", "SALESFORCE_CLIENT_SECRET",
         "-e", "SALESFORCE_USERNAME",
         "-e", "SALESFORCE_PASSWORD",
+        "-e", "SALESFORCE_DOMAIN_URL",
         "suraj20028/salesforce-mcp-server"
       ],
       "env": {
@@ -87,7 +91,7 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
         "SALESFORCE_CLIENT_SECRET": "${input:client_secret}",
         "SALESFORCE_USERNAME": "${input:username}",
         "SALESFORCE_PASSWORD": "${input:password}",
-   `    "SANDBOX":"${input:sandbox}"
+        "SALESFORCE_DOMAIN_URL": "${input:domain_url}",
       }
     }
   }

@@ -61,6 +61,12 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
       "id": "password",
       "description": "Salesforce Password",
       "password": false
+    },
+    {
+      "type": "promptString",
+      "id": "sandbox",
+      "description": "Salesforce Sandbox",
+      "password": false
     }
   ],
   "servers": {
@@ -80,7 +86,8 @@ Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace
         "SALESFORCE_CLIENT_ID": "${input:client_id}",
         "SALESFORCE_CLIENT_SECRET": "${input:client_secret}",
         "SALESFORCE_USERNAME": "${input:username}",
-        "SALESFORCE_PASSWORD": "${input:password}"
+        "SALESFORCE_PASSWORD": "${input:password}",
+   `    "SANDBOX":"${input:sandbox}"
       }
     }
   }
